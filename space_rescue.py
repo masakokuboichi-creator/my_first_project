@@ -69,9 +69,16 @@ class OneKeyGame:
             0,
         )
 
+    def draw_score(self):
+        score=F"SCORE:{self.score}"
+        for i in range(1,-1,-1):
+            color=7 if i ==0 else 0
+            pyxel.text(3+i,3,score,color)
+
     def draw(self):
         self.draw_sky()
         self.draw_ship()
+        self.draw_score()
 
 
 OneKeyGame()
