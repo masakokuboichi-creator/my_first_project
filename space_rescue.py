@@ -15,7 +15,7 @@ class OneKeyGame:
 
         pyxel.load("my_first_game.pyxres")
 
-        self.is_titile=True
+        self.is_title=True
         self.reset_game()
 
         pyxel.run(self.update,self.draw)
@@ -36,8 +36,49 @@ class OneKeyGame:
         self.survivors=[]
         self.meteors=[]
 
+    def update_ship(self):
+        if pyxel.btn(pyxel.KEY_SPACE):
+            self.is_jetting=True
+            self.ship_vy=max(self.ship_vy-SHIP_ACCEL_UP,-MAX_SHIP_SPEED)
+            self.ship_vx=max(
+                min(self.ship_vx+self.ship_dir*SHIP_ACCEL_X,1),-MAX_SHIP_SPEED
+            )
+            pyxel.play(0,0)
+        else:
+            self.is_jetting=False
+            self.ship_vy=min(self.ship_vy+SHIP_ACCEL_DOWN,MAX_SHIP_SPEED)
+
+        if pyxel.btnr(pyxel.KEY_SPACE):
+            self.ship_dir=-self.ship_dir
+
+        self.ship_x+=self.ship_vx
+        self.ship_y+=self.ship_vy
+
+        if self.ship_x<0:
+            self.ship_x=0
+            self.ship_vx=abs(self.ship_vx)
+            pyxel.play(0,1)
+
+        max_ship_x=pyxel.width-8
+        if self.ship_x>max_ship_x:
+            self.ship_x=max_ship_x
+            self.ship_vx=-abs(self.ship_vx)
+            pyxel.play(0,1)
+
+        max_ship_y=pyxel.height-8
+        if self.ship_y>max_ship_y:
+            self.ship_y=max_ship_y
+            self.ship_vy=-abs(self.ship_vy)
+            pyxel.play(0,1)
+
     def update(self):
-        pass
+         if self.is_title:
+            if pyxel.btnp(pyxel.KEY_RETURN):
+                self.is_title=False
+                self.reset_game()
+            return
+         
+         self.update_ship()
 
     def draw_sky(self):
         num_grads=4
@@ -65,7 +106,7 @@ class OneKeyGame:
             8,
             0,
             8,
-            8,
+            16,
             0,
         )
 
@@ -75,10 +116,19 @@ class OneKeyGame:
             color=7 if i ==0 else 0
             pyxel.text(3+i,3,score,color)
 
+    def draw_title(self):
+        for i in range(1,-1,-1):
+            color=10 if i ==0 else 8
+            pyxel.text(57,50+i,GAME_TITLE,color)
+            pyxel.text(42,70,"- Press Enter Key -",3)
+
     def draw(self):
         self.draw_sky()
         self.draw_ship()
         self.draw_score()
+
+        if self.is_title:
+            self.draw_title()
 
 
 OneKeyGame()
