@@ -65,6 +65,11 @@ class OneKeyGame:
             self.ship_vx=-abs(self.ship_vx)
             pyxel.play(0,1)
 
+        if self.ship_y<0:
+            self.ship_y=0
+            self.ship_vy=abs(self.ship_vy)
+            pyxel.play(0,1)
+
         max_ship_y=pyxel.height-8
         if self.ship_y>max_ship_y:
             self.ship_y=max_ship_y
@@ -99,16 +104,32 @@ class OneKeyGame:
 
 
     def draw_ship(self):
+        offset_y=(pyxel.frame_count%3+2)if self.is_jetting else 0
+        offset_x=offset_y*-self.ship_dir
+
         pyxel.blt(
-            self.ship_x,
+            self.ship_x-self.ship_dir*3+offset_x,
             self.ship_y,
             0,
-            8,
             0,
+            0,
+            8*self.ship_dir,
             8,
-            16,
             0,
         )
+
+        pyxel.blt(
+            self.ship_x,
+            self.ship_y+3+offset_y,
+            0,
+            8,
+            8,
+            8,
+            8,
+            0,
+        )
+
+        pyxel.blt(self.ship_x,self.ship_y,0,8,0,8,8,0)
 
     def draw_score(self):
         score=F"SCORE:{self.score}"
