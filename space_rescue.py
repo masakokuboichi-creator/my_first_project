@@ -36,6 +36,23 @@ class OneKeyGame:
         self.survivors=[]
         self.meteors=[]
 
+    def generate_distanced_pos(self,dist):
+        while True:
+            x=pyxel.rndi(0,pyxel.width-8)
+            y=pyxel.rndi(0,pyxel.height-8)
+            diff_x=x-self.ship_x
+            diff_y=y-self.ship_y
+            if diff_x**2+diff_y**2>dist**2:
+                return(x,y)
+            
+    def add_survivor(self):
+        survivor_pos=self.generate_distanced_pos(30)
+        self.survivors.append(survivor_pos)
+
+    def add_meteor(self):
+        meteor_pos=self.generate_distanced_pos(60)
+        self.meteors.append(meteor_pos)
+
     def update_ship(self):
         if pyxel.btn(pyxel.KEY_SPACE):
             self.is_jetting=True
@@ -76,6 +93,14 @@ class OneKeyGame:
             self.ship_vy=-abs(self.ship_vy)
             pyxel.play(0,1)
 
+    def add_objects(self):
+        if self.timer==0:
+            self.add_survivor()
+            self.add_meteor()
+            self.timer=OBJECT_SPAWN_INTERVAL
+        else:
+            self.timer-=1
+
     def update(self):
          if self.is_title:
             if pyxel.btnp(pyxel.KEY_RETURN):
@@ -84,6 +109,7 @@ class OneKeyGame:
             return
          
          self.update_ship()
+         self.add_objects()
 
     def draw_sky(self):
         num_grads=4
@@ -131,6 +157,14 @@ class OneKeyGame:
 
         pyxel.blt(self.ship_x,self.ship_y,0,8,0,8,8,0)
 
+    def draw_survivors(self):
+        for survivor_x,survivor_y in self.survivors:
+            pyxel.blt(survivor_x,survivor_y,0,16,0,8,8,0)
+
+    def draw_meteors(self):
+        for meteor_x,meteor_y in self.meteors:
+            pyxel.blt(meteor_x,meteor_y,0,24,0,8,8,0)
+    
     def draw_score(self):
         score=F"SCORE:{self.score}"
         for i in range(1,-1,-1):
@@ -146,6 +180,8 @@ class OneKeyGame:
     def draw(self):
         self.draw_sky()
         self.draw_ship()
+        self.draw_survivors()
+        self.draw_meteors()
         self.draw_score()
 
         if self.is_title:
