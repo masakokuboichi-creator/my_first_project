@@ -101,15 +101,35 @@ class OneKeyGame:
         else:
             self.timer-=1
 
+    def check_ship_collisions(self,x,y):
+        return abs(self.ship_x-x)<=5 and abs(self.ship_y-y)<=5
+    
+    def handle_survivor_collisions(self):
+        new_survivors=[]
+        for survivor_x,survivor_y in self.survivors:
+            if self.check_ship_collisions(survivor_x,survivor_y):
+                self.score+=1
+                pyxel.play(1,2)
+            else:
+                new_survivors.append((survivor_x,survivor_y))
+        self.sorvivors=new_survivors
+
+    def handle_meteor_collisions(self):
+        for meteor_x,meteor_y in self.meteors:
+            if self.check_ship_collisions(meteor_x,meteor_y):
+                self.is_exploding=True
+                pyxel.play(1,3)
+
     def update(self):
          if self.is_title:
             if pyxel.btnp(pyxel.KEY_RETURN):
                 self.is_title=False
                 self.reset_game()
             return
-         
          self.update_ship()
          self.add_objects()
+         self.handle_survivor_collisions()
+         self.handle_meteor_collisions()
 
     def draw_sky(self):
         num_grads=4
@@ -156,6 +176,13 @@ class OneKeyGame:
         )
 
         pyxel.blt(self.ship_x,self.ship_y,0,8,0,8,8,0)
+
+        if self.is_exploding:
+            blast_x=self.ship_x+pyxel.rndi(1,6)
+            blast_y=self.ship_y+pyxel.rndi(1,6)
+            blast_radius=pyxel.rndi(2,4)
+            blast_color=pyxel.rndi(7,10)
+            pyxel.circ(blast_x,blast_y,blast_radius,blast_color)
 
     def draw_survivors(self):
         for survivor_x,survivor_y in self.survivors:
