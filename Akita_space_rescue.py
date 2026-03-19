@@ -1,6 +1,6 @@
 import pyxel
 
-GAME_TITLE="Space Resceu"
+GAME_TITLE="Akita Space Rescue"
 
 SHIP_ACCEL_X=0.06
 SHIP_ACCEL_UP=0.04
@@ -277,7 +277,7 @@ class OneKeyGame:
     def draw_title(self):
         for i in range(1,-1,-1):
             color=10 if i ==0 else 8
-            pyxel.text(57,50+i,GAME_TITLE,color)
+            pyxel.text(45,50+i,GAME_TITLE,color)
             pyxel.text(42,70,"- Press Enter Key -",3)
    
         if self.life == 0:
