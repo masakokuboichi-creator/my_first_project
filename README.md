@@ -1,7 +1,10 @@
 # my_first_project
 プログラミング学習
 
-space_rescue.py（「ゲームで学ぶPython！Pyxelではじめるレトロゲームプログラミング」リブロワークス［著］　北尾　崇［著・監修］　技術評論社　参考）
+第一作品
+作品名
+Akita_space_rescue.py
+（「ゲームで学ぶPython！Pyxelではじめるレトロゲームプログラミング」リブロワークス［著］　北尾　崇［著・監修］　技術評論社　参考）
 
 PythonとPyxelを使用して制作した、2Dアクション・レスキューゲームです。
 
